@@ -21,6 +21,7 @@ from pyethash import (
     mkcache_bytes,
 )
 
+import pyecceth
 
 from eth.validation import (
     validate_length,
@@ -86,6 +87,50 @@ def check_pow(block_number: int,
 
 
 MAX_TEST_MINE_ATTEMPTS = 1000
+
+
+def check_eccpow(previous_header: Hash32,
+              current_header: Hash32,
+              n: int,
+              wc: int,
+              wr: int,
+              ) -> None:
+    validate_length(previous_header, 32, title="Previous Hash")
+    validate_length(current_header, 32, title="Current Hash")
+    # validate_length(nonce, 8, title="POW Nonce")
+    # cache = get_cache(block_number)
+
+    mining_output = pyecceth.eth_ecc(
+        previous_header, current_header, n, wc, wr)
+    # if mining_output[b'mix digest'] != mix_hash:
+    #     raise ValidationError(
+    #         "mix hash mismatch; expected: {} != actual: {}. "
+    #         "Mix hash calculated from block #{}, mine hash {}, nonce {}, difficulty {}, "
+    #         "cache hash {}".format(
+    #             encode_hex(mining_output[b'mix digest']),
+    #             encode_hex(mix_hash),
+    #             block_number,
+    #             encode_hex(mining_hash),
+    #             encode_hex(nonce),
+    #             difficulty,
+    #             encode_hex(keccak(cache)),
+    #         )
+    #     )
+    result = big_endian_to_int(mining_output[b'result'])
+    # validate_lte(result, 2**256 // difficulty, title="POW Difficulty")
+
+
+def mine_eccpow_nonce(prev_hash: Hash32, cur_hash: Hash32, n: int, wc: int, wr: int) -> bytes:
+    # cache = get_cache(block_number)
+
+    mining_output = pyecceth.eth_ecc(prev_hash, cur_hash, n, wc, wr)
+    result = big_endian_to_int(mining_output[b'result'])
+    result_cap = 2**256 // n * wc * wr
+    if result <= result_cap:
+        return result.to_bytes(8, 'big')
+        # return result.to_bytes(8, 'big'), mining_output[b'mix digest']
+
+    raise Exception("Too many attempts at POW mining, giving up")
 
 
 def mine_pow_nonce(block_number: int, mining_hash: Hash32, difficulty: int) -> Tuple[bytes, bytes]:

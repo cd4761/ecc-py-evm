@@ -28,6 +28,7 @@ import rlp
 
 from eth.consensus.pow import (
     check_pow,
+    check_eccpow,
 )
 from eth.constants import (
     GENESIS_PARENT_HASH,
@@ -937,14 +938,24 @@ class VM(BaseVM):
                     )
                     raise
 
+    # @classmethod
+    # def validate_seal(cls, header: BlockHeader) -> None:
+    #     """
+    #     Validate the seal on the given header.
+    #     """
+    #     check_pow(
+    #         header.block_number, header.mining_hash,
+    #         header.mix_hash, header.nonce, header.difficulty)
+
     @classmethod
-    def validate_seal(cls, header: BlockHeader) -> None:
+    def validate_seal(clscls, header: BlockHeader) -> None:
         """
-        Validate the seal on the given header.
+        Validate the seal on the given header in eccpow.
         """
-        check_pow(
-            header.block_number, header.mining_hash,
-            header.mix_hash, header.nonce, header.difficulty)
+        # ToDo: Have to change difficulty parameter
+        check_eccpow(
+            header.parent_hash, header.mining_hash, 24, 3, 6
+        )
 
     @classmethod
     def validate_uncle(cls, block: BaseBlock, uncle: BaseBlock, uncle_parent: BaseBlock) -> None:

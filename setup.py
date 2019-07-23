@@ -13,7 +13,7 @@ deps = {
         "lru-dict>=1.1.6",
         "mypy_extensions>=0.4.1,<1.0.0",
         "py-ecc>=1.4.7,<2.0.0",
-        "pyethash>=0.1.27,<1.0.0",
+        "pyeccpow>=0.1.0,<1.0.0",
         "rlp>=1.1.0,<2.0.0",
         "trie>=1.4.0,<2.0.0",
     ],
@@ -91,13 +91,13 @@ with open('README.md') as readme_file:
     long_description = readme_file.read()
 
 setup(
-    name='py-evm',
+    name='py-evm-ecc',
     # *IMPORTANT*: Don't manually change the version here. Use the 'bumpversion' utility.
     version='0.3.0-alpha.1',
-    description='Python implementation of the Ethereum Virtual Machine',
+    description='Python implementation of the Ethereum Virtual Machine with EccPoW',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='Ethereum Foundation',
+    author='Jason Hwang',
     author_email='piper@pipermerriam.com',
     url='https://github.com/ethereum/py-evm',
     include_package_data=True,
@@ -106,7 +106,7 @@ setup(
     extras_require=deps,
     license='MIT',
     zip_safe=False,
-    keywords='ethereum blockchain evm',
+    keywords='ethereum blockchain evm eccpow',
     packages=find_packages(exclude=["tests", "tests.*"]),
     classifiers=[
         'Development Status :: 3 - Alpha',

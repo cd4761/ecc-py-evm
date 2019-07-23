@@ -3,7 +3,7 @@ import pytest
 from eth_utils import ValidationError
 
 from eth.chains.base import MiningChain
-from eth.consensus.pow import check_pow
+from eth.consensus.pow import check_eccpow
 from eth.tools.builder.chain import (
     build,
     byzantium_at,
@@ -115,12 +115,12 @@ def test_chain_builder_enable_pow_mining():
         genesis(),
     )
     block = chain.mine_block()
-    check_pow(
-        block.number,
+    check_eccpow(
+        block.header.parent_hash,
         block.header.mining_hash,
-        block.header.mix_hash,
-        block.header.nonce,
-        block.header.difficulty,
+        24,
+        3,
+        6,
     )
 
 
@@ -143,12 +143,13 @@ def test_chain_builder_disable_pow_check():
     )
     block = chain.mine_block()
     with pytest.raises(ValidationError, match='mix hash mismatch'):
-        check_pow(
-            block.number,
+        # ToDo: Have to change difficulty
+        check_eccpow(
+            block.header.parent_hash,
             block.header.mining_hash,
-            block.header.mix_hash,
-            block.header.nonce,
-            block.header.difficulty,
+            24,
+            3,
+            6,
         )
 
 

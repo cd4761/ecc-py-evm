@@ -44,7 +44,6 @@ from .sedes import (
     trie_root,
 )
 
-
 class MiningHeader(rlp.Serializable):
     fields = [
         ('parent_hash', hash32),

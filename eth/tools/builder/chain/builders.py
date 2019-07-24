@@ -247,7 +247,7 @@ GENESIS_DEFAULTS = cast(
         ('gas_limit', constants.GENESIS_GAS_LIMIT),
         ('gas_used', 0),
         ('bloom', 0),
-        ('mix_hash', constants.ZERO_HASH32),
+        ('mix_hash', constants.GENESIS_PARENT_HASH),
         ('nonce', constants.GENESIS_NONCE),
         ('block_number', constants.GENESIS_BLOCK_NUMBER),
         ('parent_hash', constants.GENESIS_PARENT_HASH),

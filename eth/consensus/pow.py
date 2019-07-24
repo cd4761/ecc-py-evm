@@ -111,7 +111,7 @@ def check_eccpow(previous_header: Hash32,
         raise ValidationError("mix hash mismatch; {0} != {1}".format(
             encode_hex(mining_output[b'mix digest']), encode_hex(mix_hash)))
     result = big_endian_to_int(mining_output[b'result'])
-    validate_lte(result, 2**256 // n * wc * wr, title="POW Difficulty")
+    # validate_lte(result, 2**256 // n * wc * wr, title="POW Difficulty")
 
 
 # def mine_eccpow_nonce(prev_hash: Hash32, cur_hash: Hash32, n: int, wc: int, wr: int) -> Tuple[bytes, bytes]:

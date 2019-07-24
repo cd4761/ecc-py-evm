@@ -103,8 +103,8 @@ def check_eccpow(previous_header: Hash32,
     validate_length(previous_header, 32, title="Previous Hash")
     validate_length(current_header, 32, title="Current Hash")
 
-    mining_output = pyecceth.eth_ecc(previous_header, current_header, n, wc, wr)
-    # mining_output = pyeccpow.eth_ecc(previous_header, current_header, n, wc, wr)
+    # mining_output = pyecceth.eth_ecc(previous_header, current_header, n, wc, wr)
+    mining_output = pyeccpow.eth_ecc(previous_header, current_header, n, wc, wr)
     if previous_header == current_header:
         raise ValidationError(
             "mix hash mismatch; "
@@ -113,29 +113,29 @@ def check_eccpow(previous_header: Hash32,
     validate_lte(result, 2**256 // n * wc * wr, title="POW Difficulty")
 
 
-def mine_eccpow_nonce(prev_hash: Hash32, cur_hash: Hash32, n: int, wc: int, wr: int) -> Tuple[bytes, bytes]:
-    # cache = get_cache(block_number)
-
-    mining_output = pyecceth.eth_ecc(prev_hash, cur_hash, n, wc, wr)
-    result = big_endian_to_int(mining_output[b'result'])
-    result_cap = 2**256 // n * wc * wr
-    if result <= result_cap:
-        return result.to_bytes(8, 'big'), prev_hash
-        # return result.to_bytes(8, 'big'), mining_output[b'mix digest']
-
-    raise Exception("Too many attempts at POW mining, giving up")
-
 # def mine_eccpow_nonce(prev_hash: Hash32, cur_hash: Hash32, n: int, wc: int, wr: int) -> Tuple[bytes, bytes]:
 #     # cache = get_cache(block_number)
 #
-#     mining_output = pyeccpow.eth_ecc(prev_hash, cur_hash, n, wc, wr)
+#     mining_output = pyecceth.eth_ecc(prev_hash, cur_hash, n, wc, wr)
 #     result = big_endian_to_int(mining_output[b'result'])
 #     result_cap = 2**256 // n * wc * wr
 #     if result <= result_cap:
-#         return result.to_bytes(8, 'big'), mining_output[b'mix digest']
+#         return result.to_bytes(8, 'big'), prev_hash
 #         # return result.to_bytes(8, 'big'), mining_output[b'mix digest']
 #
 #     raise Exception("Too many attempts at POW mining, giving up")
+
+def mine_eccpow_nonce(prev_hash: Hash32, cur_hash: Hash32, n: int, wc: int, wr: int) -> Tuple[bytes, bytes]:
+    # cache = get_cache(block_number)
+
+    mining_output = pyeccpow.eth_ecc(prev_hash, cur_hash, n, wc, wr)
+    result = big_endian_to_int(mining_output[b'result'])
+    result_cap = 2**256 // n * wc * wr
+    if result <= result_cap:
+        return result.to_bytes(8, 'big'), mining_output[b'mix digest']
+        # return result.to_bytes(8, 'big'), mining_output[b'mix digest']
+
+    raise Exception("Too many attempts at POW mining, giving up")
 
 
 def mine_pow_nonce(block_number: int, mining_hash: Hash32, difficulty: int) -> Tuple[bytes, bytes]:

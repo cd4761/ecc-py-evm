@@ -23,7 +23,7 @@ from pyethash import (
     mkcache_bytes,
 )
 
-import pyecceth
+# import pyecceth
 import pyeccpow
 
 

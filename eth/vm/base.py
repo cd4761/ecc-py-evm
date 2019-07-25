@@ -953,9 +953,7 @@ class VM(BaseVM):
         Validate the seal on the given header in eccpow.
         """
         # ToDo: Have to change difficulty parameter
-        check_eccpow(
-            header.parent_hash, header.mining_hash, 24, 3, 6
-        )
+        check_eccpow(header.parent_hash, header.mining_hash, 24, 3, 6)
 
     @classmethod
     def validate_uncle(cls, block: BaseBlock, uncle: BaseBlock, uncle_parent: BaseBlock) -> None:

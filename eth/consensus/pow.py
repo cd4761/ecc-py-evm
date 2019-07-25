@@ -103,9 +103,11 @@ def check_eccpow(previous_header: Hash32, current_header: Hash32,
 
     # mining_output = pyecceth.eth_ecc(previous_header, current_header, n, wc, wr)
     mining_output = pyeccpow.eth_ecc(previous_header, current_header, n, wc, wr)
+
     if mining_output[b'mix digest'] != mix_hash:
         raise ValidationError("mix hash mismatch; {0} != {1}".format(
             encode_hex(mining_output[b'mix digest']), encode_hex(mix_hash)))
+
     result = big_endian_to_int(mining_output[b'result'])
     validate_lte(result, 2**256 // n * wc * wr, title="POW Difficulty")
 

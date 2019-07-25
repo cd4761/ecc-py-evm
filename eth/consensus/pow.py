@@ -94,12 +94,8 @@ def check_pow(block_number: int,
 MAX_TEST_MINE_ATTEMPTS = 1000
 
 
-def check_eccpow(previous_header: Hash32,
-              current_header: Hash32,
-              n: int,
-              wc: int,
-              wr: int,
-              ) -> None:
+def check_eccpow(previous_header: Hash32, current_header: Hash32,
+                 n: int, wc: int, wr: int) -> None:
     mix_hash = b'00000000000000000000000000000000'
     validate_length(previous_header, 32, title="Previous Hash")
     validate_length(current_header, 32, title="Current Hash")
@@ -114,38 +110,23 @@ def check_eccpow(previous_header: Hash32,
     validate_lte(result, 2**256 // n * wc * wr, title="POW Difficulty")
 
 
-# def mine_eccpow_nonce(prev_hash: Hash32, cur_hash: Hash32, n: int, wc: int, wr: int) -> Tuple[bytes, bytes]:
-#     # cache = get_cache(block_number)
-#
-#     mining_output = pyecceth.eth_ecc(prev_hash, cur_hash, n, wc, wr)
-#     result = big_endian_to_int(mining_output[b'result'])
-#     result_cap = 2**256 // n * wc * wr
-#     if result <= result_cap:
-#         return result.to_bytes(8, 'big'), prev_hash
-#         # return result.to_bytes(8, 'big'), mining_output[b'mix digest']
-#
-#     raise Exception("Too many attempts at POW mining, giving up")
-
 def mine_eccpow_nonce(prev_hash: Hash32, cur_hash: Hash32, n: int, wc: int, wr: int) -> Tuple[bytes, bytes]:
-    # cache = get_cache(block_number)
-
     mining_output = pyeccpow.eth_ecc(prev_hash, cur_hash, n, wc, wr)
     result = big_endian_to_int(mining_output[b'result'])
     result_cap = 2**256 // n * wc * wr
     if result <= result_cap:
         return result.to_bytes(8, 'big'), mining_output[b'mix digest']
-        # return result.to_bytes(8, 'big'), mining_output[b'mix digest']
 
     raise Exception("Too many attempts at POW mining, giving up")
 
 
-def mine_pow_nonce(block_number: int, mining_hash: Hash32, difficulty: int) -> Tuple[bytes, bytes]:
-    cache = get_cache(block_number)
-    for nonce in range(MAX_TEST_MINE_ATTEMPTS):
-        mining_output = hashimoto_light(block_number, cache, mining_hash, nonce)
-        result = big_endian_to_int(mining_output[b'result'])
-        result_cap = 2**256 // difficulty
-        if result <= result_cap:
-            return nonce.to_bytes(8, 'big'), mining_output[b'mix digest']
-
-    raise Exception("Too many attempts at POW mining, giving up")
+# def mine_pow_nonce(block_number: int, mining_hash: Hash32, difficulty: int) -> Tuple[bytes, bytes]:
+#     cache = get_cache(block_number)
+#     for nonce in range(MAX_TEST_MINE_ATTEMPTS):
+#         mining_output = hashimoto_light(block_number, cache, mining_hash, nonce)
+#         result = big_endian_to_int(mining_output[b'result'])
+#         result_cap = 2**256 // difficulty
+#         if result <= result_cap:
+#             return nonce.to_bytes(8, 'big'), mining_output[b'mix digest']
+#
+#     raise Exception("Too many attempts at POW mining, giving up")

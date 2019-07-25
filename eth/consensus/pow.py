@@ -100,10 +100,10 @@ def check_eccpow(previous_header: Hash32,
               wc: int,
               wr: int,
               ) -> None:
+    mix_hash = b'00000000000000000000000000000000'
     validate_length(previous_header, 32, title="Previous Hash")
     validate_length(current_header, 32, title="Current Hash")
-    # mix_hash = b'0000000000000000000000000000000'
-    mix_hash = b'00000000000000000000000000000000'
+    validate_length(mix_hash, 32, title="Mix Hash")
 
     # mining_output = pyecceth.eth_ecc(previous_header, current_header, n, wc, wr)
     mining_output = pyeccpow.eth_ecc(previous_header, current_header, n, wc, wr)
@@ -111,7 +111,7 @@ def check_eccpow(previous_header: Hash32,
         raise ValidationError("mix hash mismatch; {0} != {1}".format(
             encode_hex(mining_output[b'mix digest']), encode_hex(mix_hash)))
     result = big_endian_to_int(mining_output[b'result'])
-    # validate_lte(result, 2**256 // n * wc * wr, title="POW Difficulty")
+    validate_lte(result, 2**256 // n * wc * wr, title="POW Difficulty")
 
 
 # def mine_eccpow_nonce(prev_hash: Hash32, cur_hash: Hash32, n: int, wc: int, wr: int) -> Tuple[bytes, bytes]:

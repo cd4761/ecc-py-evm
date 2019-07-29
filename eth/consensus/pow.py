@@ -101,7 +101,6 @@ def check_eccpow(previous_header: Hash32, current_header: Hash32,
     validate_length(current_header, 32, title="Current Hash")
     validate_length(mix_hash, 32, title="Mix Hash")
 
-    # mining_output = pyecceth.eth_ecc(previous_header, current_header, n, wc, wr)
     mining_output = pyeccpow.eth_ecc(previous_header, current_header, n, wc, wr)
 
     if mining_output[b'mix digest'] != mix_hash:

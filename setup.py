@@ -91,7 +91,7 @@ with open('README.md') as readme_file:
     long_description = readme_file.read()
 
 setup(
-    name='py-evm-ecc',
+    name='py-evm',
     # *IMPORTANT*: Don't manually change the version here. Use the 'bumpversion' utility.
     version='0.3.0-alpha.1',
     description='Python implementation of the Ethereum Virtual Machine with EccPoW',
